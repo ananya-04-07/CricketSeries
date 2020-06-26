@@ -9,7 +9,7 @@ public class MatchSeries {
     private Map<Integer, SeriesWiseMatchDetail> seriesDetail = new HashMap<>();
     private SeriesWiseMatchDetail seriesWiseMatchDetail;
 
-    public void seriesStart()
+    public void MatchStart()
     {
         team1 = Team.values()[0].toString() ;
         team2 = Team.values()[1].toString();
@@ -23,13 +23,12 @@ public class MatchSeries {
             team2 = temp;
         }
         MatchController matchController =  new MatchController(team1,team2,6);
-        matchController.insertTeamDetails(team1);
-        matchController.insertTeamDetails(team2);
+        matchController.getTeamDetail(team1);
+        matchController.getTeamDetail(team2);
         seriesWiseMatchDetail = matchController.playerSelection(PlayerDetails.getPlayerList(team1,team2));
-        System.out.println(seriesWiseMatchDetail);
 
     }
-    public void displaySeriesDetail()
+    public void displaySeriesResult()
     {
         for(SeriesWiseMatchDetail seriesWiseMatchDetail:seriesDetail.values())
         {
@@ -44,18 +43,18 @@ public class MatchSeries {
             }
         }
     }
-    public static void main(String[] args) {
-        //---------Running Series of 4 matches-------------------------
-        MatchSeries matchSeries = new MatchSeries();
+    public void seriesStart()
+    {
         for(int i = 1;i<=4;i++)
         {
             System.out.println(i + "  "+ "Match Starts");
-            matchSeries.seriesStart();
+            MatchStart();
             System.out.println("Match END");
             System.out.println("Score of Match");
-            matchSeries.seriesDetail.put(i,matchSeries.seriesWiseMatchDetail);
+            seriesDetail.put(i,seriesWiseMatchDetail);
         }
-        matchSeries.displaySeriesDetail();
+        displaySeriesResult();
     }
+
 }
 

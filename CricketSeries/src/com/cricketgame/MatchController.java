@@ -73,7 +73,7 @@ public class MatchController {
         opener2 = temp;
     }
 
-    public void matchtStart(List<String> team1Players, List<String> team2Players) {
+    public void InningsStart(List<String> team1Players, List<String> team2Players) {
         opener1 = (team1Players.get(0));
         opener2 = team1Players.get(1);
         baller = (team2Players.get(0));
@@ -105,18 +105,18 @@ public class MatchController {
     }
 
     public SeriesWiseMatchDetail playerSelection(List<String> players) {
-        insertPlayerDetails(players);
+        getPlayerDetail(players);
         teamScoreBoardDisplay();
         List<String> team1Players = players.subList(0, players.size() / 2);
         List<String> team2Players = players.subList(players.size() / 2, players.size());
         System.out.println(team1Players);
         System.out.println(team2Players);
         System.out.println("============= FISRT INNING==================================");
-        matchtStart(team1Players, team2Players);
+        InningsStart(team1Players, team2Players);
         int totRunTeam1 = getTeamFinalScore(team1);
         teamRunUpdate(team1, totRunTeam1, ballPlayedTeam);
         System.out.println("============= SECOND INNING=================================");
-        matchtStart(team2Players, team1Players);
+        InningsStart(team2Players, team1Players);
         int totRunTeam2 = getTeamFinalScore(team2);
         teamRunUpdate(team2, totRunTeam2, ballPlayedTeam);
         teamScoreBoardDisplay();
@@ -126,7 +126,7 @@ public class MatchController {
         return seriesWiseMatchDetail;
     }
 
-    public void insertPlayerDetails(List<String> players) {
+    public void getPlayerDetail(List<String> players) {
         PlayerDetails playerDetail;
         for (int i = 0; i < players.size(); i++) {
             if (i < players.size() / 2) {
@@ -138,7 +138,7 @@ public class MatchController {
         }
     }
 
-    public void insertTeamDetails(String team) {
+    public void getTeamDetail(String team) {
         TeamDetails teamDetail = new TeamDetails.TeamDetailBuilder(team, MatchUtils.getJerseyColor(team)).team();
         teamsScore.put(team, teamDetail);
     }

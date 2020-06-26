@@ -9,7 +9,7 @@ public enum Team {
     THE_MASTER_BATTER(Arrays.asList("Malinga","Karunathane","Parera","kusalParera","Lakmal","Mendis","Udana"),"Green");
     private final List<String> PlayerList;
     private final String jerserColor;
-    Team(List<String> asList, String jerseyColor) {
+    private Team(List<String> asList, String jerseyColor) {
         PlayerList = asList;
         this.jerserColor = jerseyColor;
     }
