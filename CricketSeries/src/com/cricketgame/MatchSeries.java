@@ -1,61 +1,60 @@
-package com.cricketgame;
+package com.cricket;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Scanner;
 
 public class MatchSeries {
-    private String team1;
-    private String team2;
-    private Map<Integer, SeriesWiseMatchDetail> seriesDetail = new HashMap<>();
-    private SeriesWiseMatchDetail seriesWiseMatchDetail;
-
-    public void seriesStart()
+    private int team1Id;
+    private int team2Id;
+    private int series_id;
+    public void MatchStart(int match_num)
     {
-        team1 = Team.values()[0].toString() ;
-        team2 = Team.values()[1].toString();
-        String tossWinningTeam = MatchUtils.toss(team1,team2);
-        String batOrBall = MatchUtils.batOrBallDecision(tossWinningTeam);
-        String temp = "";
-        if(tossWinningTeam.equalsIgnoreCase(team1) && Constants.BALLING.equalsIgnoreCase(batOrBall) || (tossWinningTeam.equalsIgnoreCase(team2) && Constants.BATTING.equalsIgnoreCase(batOrBall)))
+        int tossWinningTeam = MatchUtils.toss(team1Id,team2Id);
+        String batOrBall = MatchUtils.batOrBallDecision();
+        int temp;
+        if(MatchUtils.swapDecision(tossWinningTeam,team1Id,team2Id,batOrBall))
         {
-            temp = team1;
-            team1 = team2;
-            team2 = temp;
+            temp = team1Id;
+            team1Id = team2Id;
+            team2Id = temp;
         }
-        MatchController matchController =  new MatchController(team1,team2,6);
-        matchController.insertTeamDetails(team1);
-        matchController.insertTeamDetails(team2);
-        seriesWiseMatchDetail = matchController.playerSelection(PlayerDetails.getPlayerList(team1,team2));
-        System.out.println(seriesWiseMatchDetail);
+        MatchUtils.getDataToMatchDetail(series_id,match_num,team1Id,team2Id,tossWinningTeam,batOrBall);
+        MatchController matchController =  new MatchController(team1Id,team2Id, MatchUtils.getNumberOfOver(series_id));
+        matchController.playerSelection(MatchUtils.getPlayerList(team1Id,team2Id),series_id,match_num,tossWinningTeam);
+    }
 
-    }
-    public void displaySeriesDetail()
-    {
-        for(SeriesWiseMatchDetail seriesWiseMatchDetail:seriesDetail.values())
-        {
-            System.out.println("in side");
-            for (PlayerDetails playerDetails : seriesWiseMatchDetail.getPlayersScore().values())
-            {
-                System.out.println(playerDetails.getPlayerName() + "   " + playerDetails.getTeamName() + " " + playerDetails.getRun());
-            }
-            for(TeamDetails teamDetails : seriesWiseMatchDetail.getTeamScore().values())
-            {
-                System.out.println(teamDetails.getTeamName() + "  " + teamDetails.getJerseyColor() + "  " + teamDetails.getRunScore() + "  " + teamDetails.getRunRate() + "  " + teamDetails.getOverPlayed());
-            }
+
+    public void SeriesStart() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Select SeriesId from the shown data");
+        MatchUtils.getConnection();
+        MatchUtils.showSeriesTableData();
+        System.out.print("enter series id ----->  ");
+        series_id = sc.nextInt();
+        if(!MatchUtils.checkForValidSeriresId(series_id)) {
+            System.out.println("wrong series id input");
+            System.exit(1);
         }
-    }
-    public static void main(String[] args) {
-        //---------Running Series of 4 matches-------------------------
-        MatchSeries matchSeries = new MatchSeries();
-        for(int i = 1;i<=4;i++)
+        System.out.println("select teams_id from team data");
+        MatchUtils.showTeamTableData();
+        System.out.print("enter team1Id  ----->   ");
+        team1Id = sc.nextInt();
+        System.out.print("enter team2Id ------>   ");
+        team2Id = sc.nextInt();
+        if(!MatchUtils.checkForValidTeamId(team1Id,team2Id) || team1Id == team2Id)
+        {
+            System.out.println("wrong teamId input");
+            System.exit(1);
+        }
+        int numbOfMatch = MatchUtils.getNumberOfMatch(series_id);
+        for(int i = 1;i<=numbOfMatch;i++)
         {
             System.out.println(i + "  "+ "Match Starts");
-            matchSeries.seriesStart();
+            MatchStart(i);
             System.out.println("Match END");
             System.out.println("Score of Match");
-            matchSeries.seriesDetail.put(i,matchSeries.seriesWiseMatchDetail);
+            //seriesDetail.put(i,seriesWiseMatchDetail);
         }
-        matchSeries.displaySeriesDetail();
+
+
     }
 }
-

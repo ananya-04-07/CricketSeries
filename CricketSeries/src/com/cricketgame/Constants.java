@@ -1,4 +1,4 @@
-package com.cricketgame;
+package com.cricket;
 
 public class Constants {
     static final String BATTING = "Batting";
